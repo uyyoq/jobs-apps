@@ -1,4 +1,5 @@
 import React from 'react'
+import Link from 'next/link'
 import styled from "styled-components";
 
 const Container = styled.div`
@@ -9,8 +10,8 @@ const Container = styled.div`
  position: fixed;
  width: 100%;
  margin: 0 auto;
- margin-bottom: 20px;
- background-color: rgb(176, 162, 189);
+ background-color: white;
+ border-bottom: 0.1px solid #F4ECEC;
 `
 
 const Menu = styled.div`
@@ -18,28 +19,34 @@ const Menu = styled.div`
  flex-direction: column;
  width: 100%;
  align-items:center;
- justify-content: center;
- margin: 0 auto;   
+ justify-content: center;   
 `
 
 const List = styled.p`
- font-size: 18px;
- font-weight: bold;
+ font-size: 16px;
+ font-weight: 530;
+ color: #767070;;
+ font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
  cursor: pointer;
 
  &:hover{
    font-weight: bold;
+   color: #343333;
  }
 `
 
-function Navbar() {
+function Navbar(props) {
   return (
     <Container>
       <Menu>
-        <List>Beranda</List>
+        <Link href="/indonesia">
+          <List>INDONESIA</List>
+        </Link>
       </Menu>
       <Menu>
-        <List>Cari Lowongan</List>
+        <Link href="/global">
+          <List>GLOBAL</List>
+        </Link>
       </Menu>
     </Container>
   )

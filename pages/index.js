@@ -1,14 +1,18 @@
-const { isResSent } = require("next/dist/next-server/lib/utils");
-import React from 'react';
-import Navbar from '../components/Navbar';
+import React, { useEffect } from 'react'
+import { useRouter, } from 'next/router'
+import Navbar from "../components/Navbar/index"
 
-const Jobs = () => {
-  return(
-    <div>
+const index = () => {
+  const router = useRouter()
+  useEffect(() => {
+    router.push("/indonesia")
+  }, [])
+  return (
+    <>
       <Navbar />
-      <h1>Jobs</h1>
-    </div>
+    </>
   )
+
 }
 
-export default Jobs
+export default index
