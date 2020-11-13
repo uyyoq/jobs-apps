@@ -1,16 +1,14 @@
 import React, { useEffect, useState } from 'react'
-import Navbar from '../components/Navbar'
 import styled from "styled-components";
-import List from '../components/Newlist';
+import Navbar from '../components/Navbar';
 import shortid from "shortid"
-import axios from "axios";
-import InfiniteScroll from 'react-infinite-scroller';
+import List from '../components/Newlist';
 
 const Container = styled.div`
 display: flex;
 flex-direction: column;
-align-items: center;
 justify-content: center;
+align-items: center;
 margin: 0 auto;
 padding-top: 50px;
 width: 100%;
@@ -27,84 +25,62 @@ font-family: Arial, Helvetica, sans-serif;
 font-size: 30px;
 font-weight: 550;
 `
-
 const Link = styled.a`
   color: #343333;
   text-decoration: none;
 `;
 
-const global = () => {
-  // const [data, setData] = useState([])
-  const [dataFake, setDataFake] = useState([1, 2, 3, 4, 5, 6, 7, 8, 9, 10])
-
-  // const fetchData = async () => {
-  //   const res = await axios(
-  //     'https://newsapi.org/v2/top-headlines?q=health&apiKey=4055e2c89faa40e384b1dd16c0daef44&page=1&pageSize=20',
-  //   );
-  //   setData(res.data.articles);
-  // };
-
-  // const fetchConcat = async () => {
-  //   const res = await axios(
-  //     'https://newsapi.org/v2/top-headlines?q=health&apiKey=4055e2c89faa40e384b1dd16c0daef44&page=2&pageSize=20',
-  //   );
-  //   // setData({
-  //   //   data: data.concat(res.data.articles)
-  //   // });
-  //   console.log("data", res)
-  // };
-
-
-
-
+const global = ({ data }) => {
   useEffect(() => {
-    // fetchData();
-
+    console.log("data covid", data.articles)
   }, [])
-
-  const fetchMoreData = () => {
-
-    setTimeout(() => {
-      setDataFake(dataFake.concat([1,24,2,4,5,8,1,4,5,6,7,8,6,4,3,2]))
-    }, 1500);
-    // axios.get("https://newsapi.org/v2/top-headlines?q=health&apiKey=4055e2c89faa40e384b1dd16c0daef44&page=2&pageSize=20")
-    // .then((res)=> {
-    //   console.log("indra", res)
-    // })
-  };
-
   return (
     <Container>
       <Navbar />
       <Header>Covid News - Global</Header>
-
-      <InfiniteScroll
-        dataLength={dataFake.length}
-        next={fetchMoreData}
-        hasMore={true}
-        loader={<h4>Loading...</h4>}
-      >
-        {
-          dataFake.map((i, index) => (
-            <div key={index}>
-              div - #{i}
-            </div>
-          ))
-        }
-      </InfiniteScroll>
+      {
+        data.articles.map(data => (
+          <Wrapper>
+            <Link href={data.url} target="_blank">
+              <List
+                key={shortid.generate()}
+                imgSrc={data.urlToImage}
+                title={data.title}
+                desc={data.description}
+                href={data.url}
+                source={data.source.name}
+              />
+            </Link>
+          </Wrapper>
+        ))
+      }
     </Container>
   )
 }
 
-
-// export async function getStaticProps() {
-//   const res = await fetch('https://newsapi.org/v2/everything?q=covid&apiKey=4055e2c89faa40e384b1dd16c0daef44')
-//   const data = await res.json()
-//   return {
-//     props: {
-//       data,
-//     },
+// export const getServerSideProps = async () => {
+//   try {
+//     const res = await fetch("https://newsapi.org/v2/top-headlines?q=covid&country=id&apiKey=4055e2c89faa40e384b1dd16c0daef44")
+//     const data = await res.json()
+//     return {
+//       props:
+//         { data }
+//     }
+//   } catch (error) {
+//     return {
+//       props: {}
+//     }
 //   }
 // }
 
-export default global
+export async function getStaticProps() {
+  const res = await fetch('https://newsapi.org/v2/everything?q=covid&apiKey=4055e2c89faa40e384b1dd16c0daef44')
+  const data = await res.json()
+  return {
+    props: {
+      data,
+    },
+  }
+}
+
+export default global;
