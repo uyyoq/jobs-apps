@@ -38,7 +38,13 @@ const fetchGlobal = async () => {
 }
 
 const global = () => {
-  const {data,status,error} = useQuery('globals',fetchGlobal)
+  const {data,status,error} = useQuery('globals',fetchGlobal,
+  // {
+  //   staleTime: 2000,
+  //   cacheTime: 10,
+  //   onSuccess: () => console.log('data fetched with no problems'),}
+  )
+  console.log(data);
 
   if (status === 'loading') {
     return <span>Loading...</span>
