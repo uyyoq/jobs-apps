@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react'
+import { useQuery } from 'react-query';
 import styled from "styled-components";
 import Navbar from '../components/Navbar';
 import shortid from "shortid"
@@ -30,25 +31,38 @@ const Link = styled.a`
   text-decoration: none;
 `;
 
-const global = ({ data }) => {
-  useEffect(() => {
-    console.log("data covid", data.articles)
-  }, [])
+const fetchGlobal = async () => {
+  const res = await fetch ('https://newsapi.org/v2/everything?q=covid&apiKey=4055e2c89faa40e384b1dd16c0daef44');
+  return res.json()
+  // console.log('datanya', res)
+}
+
+const global = () => {
+  const {data,status,error} = useQuery('globals',fetchGlobal)
+
+  if (status === 'loading') {
+    return <span>Loading...</span>
+  }
+
+  if (status === 'error') {
+    return <span>Error: {error.message}</span>
+  }
+
   return (
     <Container>
       <Navbar />
       <Header>Covid News - Global</Header>
       {
-        data.articles.map(data => (
+        data.articles.map(global => (
           <Wrapper>
-            <Link href={data.url} target="_blank">
+            <Link href={global.url} target="_blank">
               <List
                 key={shortid.generate()}
-                imgSrc={data.urlToImage}
-                title={data.title}
-                desc={data.description}
-                href={data.url}
-                source={data.source.name}
+                imgSrc={global.urlToImage}
+                title={global.title}
+                desc={global.description}
+                href={global.url}
+                source={global.source.name}
               />
             </Link>
           </Wrapper>
@@ -58,29 +72,5 @@ const global = ({ data }) => {
   )
 }
 
-// export const getServerSideProps = async () => {
-//   try {
-//     const res = await fetch("https://newsapi.org/v2/top-headlines?q=covid&country=id&apiKey=4055e2c89faa40e384b1dd16c0daef44")
-//     const data = await res.json()
-//     return {
-//       props:
-//         { data }
-//     }
-//   } catch (error) {
-//     return {
-//       props: {}
-//     }
-//   }
-// }
-
-export async function getStaticProps() {
-  const res = await fetch('https://newsapi.org/v2/everything?q=covid&apiKey=4055e2c89faa40e384b1dd16c0daef44')
-  const data = await res.json()
-  return {
-    props: {
-      data,
-    },
-  }
-}
 
 export default global;
