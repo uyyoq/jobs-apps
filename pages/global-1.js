@@ -58,7 +58,7 @@ const global1 = () => {
 
 
   useEffect(() => {
-    // fetchData();
+    fetchData();
 
   }, [])
 

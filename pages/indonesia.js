@@ -3,6 +3,8 @@ import styled from "styled-components";
 import Navbar from '../components/Navbar';
 import shortid from "shortid"
 import List from '../components/Newlist';
+import { useQuery } from 'react-query';
+import Loading from "../components/Loading/index"
 
 const Container = styled.div`
 display: flex;
@@ -30,10 +32,23 @@ const Link = styled.a`
   text-decoration: none;
 `;
 
-const indonesia = ({ data }) => {
-  useEffect(() => {
-    console.log("data covid", data.articles)
-  }, [])
+const fetchIndonesia = async () => {
+  const res = await fetch("https://newsapi.org/v2/top-headlines?q=covid&country=id&apiKey=4055e2c89faa40e384b1dd16c0daef44");
+  return res.json()
+}
+
+const indonesia = () => {
+  const { data, status, error } = useQuery('indonesia', fetchIndonesia)
+  console.log("INI DATANYA",data)
+  
+  if (status === 'loading') {
+    return <Loading></Loading>
+  }
+
+  if (status === 'error') {
+    return <span>Error: {error.message}</span>
+  }
+
   return (
     <Container>
       <Navbar />
@@ -73,15 +88,15 @@ const indonesia = ({ data }) => {
 //   }
 // }
 
-export async function getStaticProps() {
-  const res = await fetch('https://newsapi.org/v2/top-headlines?q=covid&country=id&apiKey=4055e2c89faa40e384b1dd16c0daef44')
-  const data = await res.json()
-  return {
-    props: {
-      data,
-    },
-  }
-}
+// export async function getStaticProps() {
+//   const res = await fetch('https://newsapi.org/v2/top-headlines?q=covid&country=id&apiKey=4055e2c89faa40e384b1dd16c0daef44')
+//   const data = await res.json()
+//   return {
+//     props: {
+//       data,
+//     },
+//   }
+// }
 
 export default indonesia;
 

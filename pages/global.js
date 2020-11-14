@@ -4,6 +4,9 @@ import styled from "styled-components";
 import Navbar from '../components/Navbar';
 import shortid from "shortid"
 import List from '../components/Newlist';
+import Loading from "../components/Loading/index"
+import { ReactQueryDevtools } from 'react-query-devtools';
+
 
 const Container = styled.div`
 display: flex;
@@ -39,15 +42,15 @@ const fetchGlobal = async () => {
 
 const global = () => {
   const {data,status,error} = useQuery('globals',fetchGlobal,
-  // {
-  //   staleTime: 2000,
-  //   cacheTime: 10,
-  //   onSuccess: () => console.log('data fetched with no problems'),}
+  {
+    staleTime: 1000,
+    cacheTime: 10,
+    onSuccess: () => console.log('data fetched with no problems'),}
   )
   console.log(data);
 
   if (status === 'loading') {
-    return <span>Loading...</span>
+    return <Loading></Loading>
   }
 
   if (status === 'error') {
@@ -55,6 +58,7 @@ const global = () => {
   }
 
   return (
+    <>
     <Container>
       <Navbar />
       <Header>Covid News - Global</Header>
@@ -75,6 +79,8 @@ const global = () => {
         ))
       }
     </Container>
+    <ReactQueryDevtools initialIsOpen /> 
+    </>
   )
 }
 
